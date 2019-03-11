@@ -12,13 +12,16 @@ public class Main {
         File file = new File("programaLISP1.txt");
         Scanner scanner = new Scanner(file);
         System.out.println("Programa:");
+        int n = 0;
         while (scanner.hasNextLine()){
             String line = scanner.nextLine(); 
         	programa += line;
-            System.out.println(line);
+        	n++;
+            System.out.println("[" + Integer.toString(n) + "]: " + line);
         }
         scanner.close();
         
+        n = 0;
         System.out.println("\nResultado:");
 		List<String> lista = Parse.MakeList(programa);
 		List<List<String>> instrucciones = Parse.GetIntructions(lista);
@@ -27,7 +30,7 @@ public class Main {
 			//System.out.println(Integer.toString(i+1)+":");
 			//branch.printData(1);
 			String result = Evaluate.EvalBranch(branch);
-	        System.out.println(result);
+	        System.out.println("[" + Integer.toString(++n) + "]: " + result);
 		}
 	}
 }
