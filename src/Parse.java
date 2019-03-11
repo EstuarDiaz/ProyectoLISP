@@ -21,7 +21,7 @@ public class Parse{
 	public static List<String> GetExpression(List<String> list) {
 		int parentesisCount = 1;
 		int toIndex = list.size();
-		for(int i = 0; (parentesisCount != 0) && (i < list.size()); i++) {
+		for(int i = 1; (parentesisCount != 0) && (i < list.size()); i++) {
 			if(list.get(i).equals("(")) {
 				parentesisCount++;
 			}
@@ -32,20 +32,19 @@ public class Parse{
 				toIndex = i;
 			}
 		}
-		return list.subList(0, toIndex);
+		return list.subList(0, toIndex+1);
 	}
 	
 	public static Node<String> MakeBranch(List<String> lista) {
-		Node<String> root = new Node<String>(lista.get(0));
-		for(int i = 1; i < lista.size(); i++) {
+		Node<String> root = new Node<String>(lista.get(1));
+		for(int i = 2; i < lista.size() - 1; i++) {
 			Node<String> leaf = null;
 			if(lista.get(i).equals("(")) {
 				//Obtengo la sublista desde la posicion actual a lo que resta
-				List<String> subLista = GetExpression(lista.subList(i+1, lista.size()));
+				List<String> subLista = GetExpression(lista.subList(i, lista.size()));
 				
-				// Corro el contador para saltarme toda la expresion 
-					// (incluyendo el parentesis de cierre)
-				i += subLista.size() + 1;
+				// Corro el contador para saltarme toda la expresion
+				i += subLista.size() - 1;
 				
 				// Ahora la nueva hoja es realmente un arbol inducido por la sublista
 				leaf = MakeBranch(subLista);
