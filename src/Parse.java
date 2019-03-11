@@ -11,9 +11,17 @@ public class Parse{
 	
 	public static List<String> MakeList(String s){
 		List<String> lista = new ArrayList<String>();
+		s = s.replace("(", " ( ");
+		s = s.replace(")", " ) ");
+		s = s.replace("+", " + ");
+		s = s.replace("*", " * ");
+		s = s.replace("-", " - ");
+		s = s.replace("/", " / ");
 		String[] texto = s.split(" ");
         for (int i = 0; i < texto.length; i++) {
-        	lista.add(texto[i]);
+        	if(!texto[i].isEmpty()) {
+        		lista.add(texto[i]);
+        	}
         }
         return lista;
 	}
