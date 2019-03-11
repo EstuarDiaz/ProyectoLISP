@@ -44,4 +44,13 @@ public class Node<T> {
  return parent;
  }
  
+ public void printData(int level) {
+	 String s = "";
+	 for(int i = 0; i < level; i++) {s = s + "-";}
+	 System.out.println(s + ">| " + this.getData());
+	 this.getChildren().forEach(each -> 
+	 	each.printData(level+1)
+	 );
+ }
+ 
 }
