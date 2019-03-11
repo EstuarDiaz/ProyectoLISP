@@ -21,7 +21,8 @@ public class Parse{
 		s = s.replace("+", " + ");
 		s = s.replace("*", " * ");
 		s = s.replace("-", " - ");
-		s = s.replace("/", " / ");
+		s = s.replace(">", " > ");
+		s = s.replace("<", " < ");
 		String[] texto = s.split(" ");
         for (int i = 0; i < texto.length; i++) {
         	if(!texto[i].isEmpty()) {
