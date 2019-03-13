@@ -1,4 +1,7 @@
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+
 public class Evaluate {
 	/**
 	 * Recibe un arbol y lo evalua de manera recursiva
@@ -34,13 +37,15 @@ public class Evaluate {
 				}
 				return Float.toString(result);
 			}
-			else if(("<>EQUAL").contains(branch.getData())) {
-				// En este caso, se obtiene el primer valor y se compara 
+			else if(("<>EQUALSETQ").contains(branch.getData())) {
+				// En este caso, se obtiene el primer valor y se compara
 				// con todos los demas, con el criterio de comparacion dado
 				String result = "true";
 				String compareTo = EvalBranch(leaves.get(0));
 				for(int i = 1; i < leaves.size(); i++) {
 					String data = EvalBranch(leaves.get(i));
+
+
 					if(branch.getData().equals("EQUAL")) {
 						if(Float.isNaN(Float.parseFloat(compareTo))) {
 							if(!compareTo.equals(data)) {
@@ -53,11 +58,36 @@ public class Evaluate {
 							}
 						}
 					}
+					else if(branch.getData().equals("WRITE")){
+						System.out.println(data);
+					}
+
 					else if(branch.getData().equals("<")) {
 						if(Float.parseFloat(compareTo) >= Float.parseFloat(data)) {
 							result = "false";
 						}
 					}
+
+					else if(branch.getData().equals("COND")) {
+
+					}
+
+					else if(branch.getData().equals("SETQ")){
+						Scanner sc  = new Scanner(System.in);
+						System.out.println("Desea usar numeros o letras?");
+						String typeofVariable = sc.nextLine();
+						ArrayList<Double> aDouble = new ArrayList<>();
+
+						if(isNumeric(data) == true || typeofVariable == "numeros"){
+							Integer variable = sc.nextInt();
+							System.out.println("SETQ" + variable);
+						}
+						else if(isNumeric(data) == false || typeofVariable == "letras"){
+							String variable = sc.nextLine();
+							System.out.println("SETQ" + variable);
+						}
+					}
+
 					else if(branch.getData().equals(">")) {
 						if(Float.parseFloat(compareTo) <= Float.parseFloat(data)) {
 							result = "false";
@@ -66,6 +96,7 @@ public class Evaluate {
 				}
 				return result;
 			}
+
 			else if(branch.getData().equals("ATOM")) {
 				// Devulve true si el objeto es de tipo atomo, false en caso contrario
 				String result = "true";
@@ -87,6 +118,14 @@ public class Evaluate {
 			else {
 				return "null";
 			}
+		}
+	}
+	public static boolean isNumeric(String str) {
+		try {
+			double d = Double.parseDouble(str);
+			return true;
+		} catch (NumberFormatException nfe) {
+			return false;
 		}
 	}
 }
