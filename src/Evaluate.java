@@ -6,7 +6,7 @@ public class Evaluate {
 	/**
 	 * Recibe un arbol y lo evalua de manera recursiva
 	 * @param branch El arbol a evaluar
-	 * @return retorna un string con el resultado, "null" si falla
+	 * @return retorna un string con el resultado, "NIL" si falla
 	 */
 	public static String EvalBranch(Node<String> branch, HashMap<String,Node<String>> funciones) {
 		if(branch.getChildren().size() == 0) {

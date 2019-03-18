@@ -59,6 +59,12 @@ public class Parse{
 		return list.subList(0, toIndex+1);
 	}
 	
+	/**
+	 * Guarda el arbol generado por la funcion, junto con sus parametros
+	 * @param list La lista que contiene una expresion
+	 * @param funciones La lista de funciones definidas por el usuario
+	 * @return
+	 */
 	public static Node<String> MakeFunction(List<String> list, HashMap<String,Node<String>> funciones){
 		// Ejempl: (DEFUN F (a b) (* a b))
 		// En la posicion 1, esta la palabra DEFUN
@@ -99,6 +105,7 @@ public class Parse{
 	/**
 	 * Dada una expresion, crea un arbol de manera recursiva que la representa
 	 * @param lista La lista a evaluar
+	 * @param funciones La lista de funciones definidas por el usuario
 	 * @return Un arbol de la clase Nodo
 	 */
 	public static Node<String> MakeBranch(List<String> lista, HashMap<String,Node<String>> funciones) {
