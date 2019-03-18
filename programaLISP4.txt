@@ -1,0 +1,7 @@
+(DEFUN FACTORIAL (x)(
+	IF(> x 1)
+		(* x (FACTORIAL(- x 1)))
+		(1)
+))
+(FACTORIAL (4))
+(FACTORIAL (6))

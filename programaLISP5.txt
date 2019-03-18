@@ -1,0 +1,14 @@
+(DEFUN FARENHEIT(TEMP)
+	(/ (- TEMP 32) 1.8)
+)
+(DEFUN FIBONACCI (N) (
+	IF(< N 3)
+	(1)
+	(+
+		(FIBONACCI(- N 1))
+		(FIBONACCI(- N 2))
+	)
+))
+(FARENHEIT (15))
+(FIBONACCI(7))
+(FIBONACCI(5))

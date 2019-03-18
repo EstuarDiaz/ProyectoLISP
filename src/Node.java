@@ -52,5 +52,21 @@ public class Node<T> {
 	 	each.printData(level+1)
 	 );
  }
- 
+
+public void replace(T search, T replace) {
+	if(this.getData().equals(search)) {
+		this.setData(replace);
+	}
+	this.getChildren().forEach(each -> 
+ 		each.replace(search, replace)
+	);
+}
+
+public Node<T> copy(){
+	Node<T> n = new Node<T>(this.getData());
+	for(int i = 0; i < children.size(); i++) {
+		n.addChild(children.get(i).copy());
+	}
+	return n;
+}
 }
