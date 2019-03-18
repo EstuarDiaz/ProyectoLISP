@@ -24,6 +24,7 @@ public class Parse{
 		s = s.replace("-", " - ");
 		s = s.replace(">", " > ");
 		s = s.replace("<", " < ");
+		s = s.replace("=", " = ");
 		s = s.replace("\t", " ");
 		String[] texto = s.split(" ");
         for (int i = 0; i < texto.length; i++) {
@@ -103,6 +104,33 @@ public class Parse{
 	public static Node<String> MakeBranch(List<String> lista, HashMap<String,Node<String>> funciones) {
 		if(lista.get(1).equals("DEFUN")) {
 			return MakeFunction(lista, funciones);
+		}
+		else if(lista.get(1).equals("COND")) {
+			Node<String> root = new Node<String>(lista.get(1));
+			int counter = 0;
+			for(int i = 3; i < lista.size() - 2; i++) {
+				Node<String> leaf = null;
+				if(lista.get(i).equals("(")) {
+					//Obtengo la sublista desde la posicion actual a lo que resta
+					List<String> subLista = GetExpression(lista.subList(i, lista.size()));
+					
+					// Corro el contador para saltarme toda la expresion
+					i += subLista.size() - 1;
+					
+					// Ahora la nueva hoja es realmente un arbol inducido por la sublista
+					leaf = MakeBranch(subLista, funciones);
+					counter++;
+				}
+				else {
+					leaf = new Node<String>(lista.get(i));
+					counter++;
+				}
+				root.addChild(leaf);
+				if(counter % 2 == 0) {
+					i = i + 2;
+				}
+			}
+			return root;
 		}
 		else {
 			int inicio, fin;

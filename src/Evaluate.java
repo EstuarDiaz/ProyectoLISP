@@ -37,33 +37,33 @@ public class Evaluate {
 				}
 				return Float.toString(result);
 			}
-			else if(("<>EQUAL").contains(branch.getData())) {
+			else if(("<>=EQUAL").contains(branch.getData())) {
 				// En este caso, se obtiene el primer valor y se compara 
 				// con todos los demas, con el criterio de comparacion dado
-				String result = "TRUE";
+				String result = "T";
 				String compareTo = EvalBranch(leaves.get(0), funciones);
 				for(int i = 1; i < leaves.size(); i++) {
 					String data = EvalBranch(leaves.get(i), funciones);
-					if(branch.getData().equals("EQUAL")) {
+					if(branch.getData().equals("=") || branch.getData().equals("EQUAL")) {
 						if(Float.isNaN(Float.parseFloat(compareTo))) {
 							if(!compareTo.equals(data)) {
-								result = "FALSE";
+								result = "F";
 							}
 						}
 						else {
 							if(Float.compare(Float.parseFloat(compareTo), Float.parseFloat(data)) != 0) {
-								result = "FALSE";
+								result = "F";
 							}
 						}
 					}
 					else if(branch.getData().equals("<")) {
 						if(Float.parseFloat(compareTo) >= Float.parseFloat(data)) {
-							result = "FALSE";
+							result = "F";
 						}
 					}
 					else if(branch.getData().equals(">")) {
 						if(Float.parseFloat(compareTo) <= Float.parseFloat(data)) {
-							result = "FALSE";
+							result = "F";
 						}
 					}
 				}
@@ -71,10 +71,10 @@ public class Evaluate {
 			}
 			else if(branch.getData().equals("ATOM")) {
 				// Devulve true si el objeto es de tipo atomo, false en caso contrario
-				String result = "TRUE";
+				String result = "T";
 				for(int i = 0; i < leaves.size(); i++) {
 					if(leaves.get(i).getChildren().size() > 0) {
-						result = "FALSE";
+						result = "F";
 					}
 				}
 				return result;
@@ -89,12 +89,23 @@ public class Evaluate {
 			}
 			else if(branch.getData().equals("IF")) {
 				List<Node<String>> children = branch.getChildren();
-				if(EvalBranch(children.get(0),funciones).equals("TRUE")) {
+				if(EvalBranch(children.get(0),funciones).equals("T")) {
 					return EvalBranch(children.get(1), funciones);
 				}
 				else {
 					return EvalBranch(children.get(2), funciones);
 				}
+			}
+			else if(branch.getData().equals("COND")) {
+				List<Node<String>> children = branch.getChildren();
+				Boolean r = false;
+				for(int i = 0; i < children.size(); i = i+2) {
+					if(EvalBranch(children.get(i),funciones).equals("T")) {
+						r = true;
+						return EvalBranch(children.get(i+1), funciones);
+					}
+				}
+				return "NIL";
 			}
 			else if(branch.getData().equals("DEFUN")) {
 				return "Function "+branch.getChildren().get(0).getData()+" defined.";
@@ -114,7 +125,7 @@ public class Evaluate {
 				return EvalBranch(instrucciones, funciones);
 			}
 			else {
-				return "NULL";
+				return "NIL";
 			}
 		}
 	}
