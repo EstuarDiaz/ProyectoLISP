@@ -1,14 +1,14 @@
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Evaluate {
 	/**
 	 * Recibe un arbol y lo evalua de manera recursiva
 	 * @param branch El arbol a evaluar
-	 * @return retorna un string con el resultado, "null" si falla
+	 * @return retorna un string con el resultado, "NIL" si falla
 	 */
-	public static String EvalBranch(Node<String> branch) {
+	public static String EvalBranch(Node<String> branch, HashMap<String,Node<String>> funciones) {
 		if(branch.getChildren().size() == 0) {
 			return branch.getData();
 		}
@@ -19,9 +19,9 @@ public class Evaluate {
 			// se opera con el tercero, el resultado se opera con el cuarto (etc.)
 			if(("+*-/").contains(branch.getData())) {
 				float result = 0;
-				result = Float.parseFloat(EvalBranch(leaves.get(0)));
+				result = Float.parseFloat(EvalBranch(leaves.get(0), funciones));
 				for(int i = 1; i < leaves.size(); i++) {
-					String data = EvalBranch(leaves.get(i));
+					String data = EvalBranch(leaves.get(i), funciones);
 					if(branch.getData().equals("+")) {
 						result = result + Float.parseFloat(data);
 					}
@@ -37,72 +37,44 @@ public class Evaluate {
 				}
 				return Float.toString(result);
 			}
-			else if(("<>EQUALSETQ").contains(branch.getData())) {
-				// En este caso, se obtiene el primer valor y se compara
+			else if(("<>=EQUAL").contains(branch.getData())) {
+				// En este caso, se obtiene el primer valor y se compara 
 				// con todos los demas, con el criterio de comparacion dado
-				String result = "true";
-				String compareTo = EvalBranch(leaves.get(0));
+				String result = "T";
+				String compareTo = EvalBranch(leaves.get(0), funciones);
 				for(int i = 1; i < leaves.size(); i++) {
-					String data = EvalBranch(leaves.get(i));
-
-
-					if(branch.getData().equals("EQUAL")) {
+					String data = EvalBranch(leaves.get(i), funciones);
+					if(branch.getData().equals("=") || branch.getData().equals("EQUAL")) {
 						if(Float.isNaN(Float.parseFloat(compareTo))) {
 							if(!compareTo.equals(data)) {
-								result = "false";
+								result = "F";
 							}
 						}
 						else {
 							if(Float.compare(Float.parseFloat(compareTo), Float.parseFloat(data)) != 0) {
-								result = "false";
+								result = "F";
 							}
 						}
 					}
-					else if(branch.getData().equals("WRITE")){
-						System.out.println(data);
-					}
-
 					else if(branch.getData().equals("<")) {
 						if(Float.parseFloat(compareTo) >= Float.parseFloat(data)) {
-							result = "false";
+							result = "F";
 						}
 					}
-
-					else if(branch.getData().equals("COND")) {
-
-					}
-
-					else if(branch.getData().equals("SETQ")){
-						Scanner sc  = new Scanner(System.in);
-						System.out.println("Desea usar numeros o letras?");
-						String typeofVariable = sc.nextLine();
-						ArrayList<Double> aDouble = new ArrayList<>();
-
-						if(isNumeric(data) == true || typeofVariable == "numeros"){
-							Integer variable = sc.nextInt();
-							System.out.println("SETQ" + variable);
-						}
-						else if(isNumeric(data) == false || typeofVariable == "letras"){
-							String variable = sc.nextLine();
-							System.out.println("SETQ" + variable);
-						}
-					}
-
 					else if(branch.getData().equals(">")) {
 						if(Float.parseFloat(compareTo) <= Float.parseFloat(data)) {
-							result = "false";
+							result = "F";
 						}
 					}
 				}
 				return result;
 			}
-
 			else if(branch.getData().equals("ATOM")) {
 				// Devulve true si el objeto es de tipo atomo, false en caso contrario
-				String result = "true";
+				String result = "T";
 				for(int i = 0; i < leaves.size(); i++) {
 					if(leaves.get(i).getChildren().size() > 0) {
-						result = "false";
+						result = "F";
 					}
 				}
 				return result;
@@ -111,21 +83,50 @@ public class Evaluate {
 				// Permite crear una lista
 				String list = "(";
 				for(int i = 0; i < leaves.size(); i++) {
-					list += EvalBranch(leaves.get(i)) + " ";
+					list += EvalBranch(leaves.get(i), funciones) + " ";
 				}
 				return list.substring(0, list.length()-1)+")";
 			}
-			else {
-				return "null";
+			else if(branch.getData().equals("IF")) {
+				List<Node<String>> children = branch.getChildren();
+				if(EvalBranch(children.get(0),funciones).equals("T")) {
+					return EvalBranch(children.get(1), funciones);
+				}
+				else {
+					return EvalBranch(children.get(2), funciones);
+				}
 			}
-		}
-	}
-	public static boolean isNumeric(String str) {
-		try {
-			double d = Double.parseDouble(str);
-			return true;
-		} catch (NumberFormatException nfe) {
-			return false;
+			else if(branch.getData().equals("COND")) {
+				List<Node<String>> children = branch.getChildren();
+				Boolean r = false;
+				for(int i = 0; i < children.size(); i = i+2) {
+					if(EvalBranch(children.get(i),funciones).equals("T")) {
+						r = true;
+						return EvalBranch(children.get(i+1), funciones);
+					}
+				}
+				return "NIL";
+			}
+			else if(branch.getData().equals("DEFUN")) {
+				return "Function "+branch.getChildren().get(0).getData()+" defined.";
+			}
+			else if(funciones.containsKey(branch.getData())) {
+				List<String> parametros = new ArrayList<String>();
+				List<Node<String>> children = branch.getChildren();
+				for(int i = 0; i < children.size(); i++) {
+					parametros.add(EvalBranch(children.get(i),funciones));
+				}
+				Node<String> funcion = funciones.get(branch.getData());
+				Node<String> instrucciones = funcion.getChildren().get(2).copy();
+				String[] nombreParametros = funcion.getChildren().get(1).getData().split(" ");
+				for(int i = 0; i < nombreParametros.length; i++) {
+					instrucciones.replace(nombreParametros[i], parametros.get(i));
+				}
+				return EvalBranch(instrucciones, funciones);
+			}
+			else {
+				return "NIL";
+			}
 		}
 	}
 }

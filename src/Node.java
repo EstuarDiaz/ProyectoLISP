@@ -52,5 +52,33 @@ public class Node<T> {
 	 	each.printData(level+1)
 	 );
  }
- 
+
+/**
+ * Reemplazar una variable por un valor en el arbol,
+ * Se utiliza para las definicion de funciones, como
+ * paso de parametros
+ * @param search variable a buscar
+ * @param replace valor por el cual se reemplaza
+ */
+public void replace(T search, T replace) {
+	if(this.getData().equals(search)) {
+		this.setData(replace);
+	}
+	this.getChildren().forEach(each -> 
+ 		each.replace(search, replace)
+	);
+}
+
+/**
+ * Crea una copia del arbol, se utiliza para evaluar
+ * fuciones definidas por el usuario
+ * @return Node identico al original.
+ */
+public Node<T> copy(){
+	Node<T> n = new Node<T>(this.getData());
+	for(int i = 0; i < children.size(); i++) {
+		n.addChild(children.get(i).copy());
+	}
+	return n;
+}
 }

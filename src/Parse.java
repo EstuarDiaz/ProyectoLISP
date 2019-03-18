@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Parse{
@@ -23,6 +24,8 @@ public class Parse{
 		s = s.replace("-", " - ");
 		s = s.replace(">", " > ");
 		s = s.replace("<", " < ");
+		s = s.replace("=", " = ");
+		s = s.replace("\t", " ");
 		String[] texto = s.split(" ");
         for (int i = 0; i < texto.length; i++) {
         	if(!texto[i].isEmpty()) {
@@ -57,6 +60,33 @@ public class Parse{
 	}
 	
 	/**
+	 * Guarda el arbol generado por la funcion, junto con sus parametros
+	 * @param list La lista que contiene una expresion
+	 * @param funciones La lista de funciones definidas por el usuario
+	 * @return
+	 */
+	public static Node<String> MakeFunction(List<String> list, HashMap<String,Node<String>> funciones){
+		// Ejempl: (DEFUN F (a b) (* a b))
+		// En la posicion 1, esta la palabra DEFUN
+		// EN la posicion 2, esta el nombre de la fucion
+		// SIgue la expresion de los parametros
+		// Sigue la funcion
+		Node<String> nombre = new Node<String>(list.get(2));
+		List<String> param = GetExpression(list.subList(3, list.size()));
+		String l = "";
+		for(int i = 1; i < param.size()-1; i++) {
+			l += param.get(i) + " ";
+		}
+		Node<String> parametros = new Node<String>(l.substring(0, l.length()));
+		Node<String> funcion = new Node<String>("DEFUN");
+		Node<String> instrucciones = MakeBranch(list.subList(3+param.size(), list.size()-1), funciones);
+		funcion.addChild(nombre);
+		funcion.addChild(parametros);
+		funcion.addChild(instrucciones);
+		return funcion;
+	}
+	
+	/**
 	 * Convierte una lista con varias expresiones en una lista de expresiones
 	 * que representan una linea o instruccion en el programa
 	 * @param texto El texto del programa
@@ -75,27 +105,69 @@ public class Parse{
 	/**
 	 * Dada una expresion, crea un arbol de manera recursiva que la representa
 	 * @param lista La lista a evaluar
+	 * @param funciones La lista de funciones definidas por el usuario
 	 * @return Un arbol de la clase Nodo
 	 */
-	public static Node<String> MakeBranch(List<String> lista) {
-		Node<String> root = new Node<String>(lista.get(1));
-		for(int i = 2; i < lista.size() - 1; i++) {
-			Node<String> leaf = null;
-			if(lista.get(i).equals("(")) {
-				//Obtengo la sublista desde la posicion actual a lo que resta
-				List<String> subLista = GetExpression(lista.subList(i, lista.size()));
-				
-				// Corro el contador para saltarme toda la expresion
-				i += subLista.size() - 1;
-				
-				// Ahora la nueva hoja es realmente un arbol inducido por la sublista
-				leaf = MakeBranch(subLista);
+	public static Node<String> MakeBranch(List<String> lista, HashMap<String,Node<String>> funciones) {
+		if(lista.get(1).equals("DEFUN")) {
+			return MakeFunction(lista, funciones);
+		}
+		else if(lista.get(1).equals("COND")) {
+			Node<String> root = new Node<String>(lista.get(1));
+			int counter = 0;
+			for(int i = 3; i < lista.size() - 2; i++) {
+				Node<String> leaf = null;
+				if(lista.get(i).equals("(")) {
+					//Obtengo la sublista desde la posicion actual a lo que resta
+					List<String> subLista = GetExpression(lista.subList(i, lista.size()));
+					
+					// Corro el contador para saltarme toda la expresion
+					i += subLista.size() - 1;
+					
+					// Ahora la nueva hoja es realmente un arbol inducido por la sublista
+					leaf = MakeBranch(subLista, funciones);
+					counter++;
+				}
+				else {
+					leaf = new Node<String>(lista.get(i));
+					counter++;
+				}
+				root.addChild(leaf);
+				if(counter % 2 == 0) {
+					i = i + 2;
+				}
 			}
-			else {
-				leaf = new Node<String>(lista.get(i));
+			return root;
+		}
+		else {
+			int inicio, fin;
+			if(funciones.containsKey(lista.get(1))) { // Si es una funcion definida por el usuario
+				inicio = 3;
+				fin = lista.size() - 2;
 			}
-			root.addChild(leaf);	
-        }
-		return root;
+			else { // Si es una expresion regular
+				inicio = 2;
+				fin = lista.size() - 1;
+			}
+			Node<String> root = new Node<String>(lista.get(1));
+			for(int i = inicio; i < fin; i++) {
+				Node<String> leaf = null;
+				if(lista.get(i).equals("(")) {
+					//Obtengo la sublista desde la posicion actual a lo que resta
+					List<String> subLista = GetExpression(lista.subList(i, lista.size()));
+					
+					// Corro el contador para saltarme toda la expresion
+					i += subLista.size() - 1;
+					
+					// Ahora la nueva hoja es realmente un arbol inducido por la sublista
+					leaf = MakeBranch(subLista, funciones);
+				}
+				else {
+					leaf = new Node<String>(lista.get(i));
+				}
+				root.addChild(leaf);
+			}
+			return root;
+		}
 	}
 }
