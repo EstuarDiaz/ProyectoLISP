@@ -1,14 +1,11 @@
-(DEFUN FTOC (TEMP) 
-	(/ (- TEMP 32) 1.8)
-)
+(DEFUN FTOC (TEMP)				; farenheit to centrigrados
+(/ (- TEMP 32) 1.8))
 (DEFUN FIBONACCI (N)
-	(COND 	((= N 0) 1)                   
-		((= N 1) 1)                   
-		(T 	(+ (FIBONACCI (- N 1))
-			(FIBONACCI (- N 2))
-			)
-		)
-	)
+	(COND ((= N 0) 1)             		; n = 0?
+		((= N 1) 1)                   	; n = 1?  
+ 		(T (+ (FIBONACCI (- N 1))     	; recursivo         
+		(FIBONACCI (- N 2)))
+	))
 )
 (FTOC (15))
 (FIBONACCI(7))

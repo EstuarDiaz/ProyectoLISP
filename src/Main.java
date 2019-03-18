@@ -16,8 +16,13 @@ public class Main {
         System.out.println("Programa:");
         int n = 0;
         while (scanner.hasNextLine()){
-            String line = scanner.nextLine(); 
-        	programa += line;
+            String line = scanner.nextLine();
+            if(line.indexOf(";") > 0) {
+            	programa += line.substring(0, line.indexOf(";"));
+            }
+            else {
+            	programa += line;	
+            }
         	n++;
             System.out.println("[" + Integer.toString(n) + "]: " + line);
         }
