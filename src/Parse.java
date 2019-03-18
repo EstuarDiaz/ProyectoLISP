@@ -13,7 +13,7 @@ public class Parse{
 	/**
 	 * Recibe un string y devuelve una lista de tokens
 	 * @param s El string a convertir
-	 * @return la lista de tokens
+	 * @return La lista de tokens
 	 */
 	public static List<String> MakeList(String s){
 		List<String> lista = new ArrayList<String>();
@@ -63,7 +63,7 @@ public class Parse{
 	 * Guarda el arbol generado por la funcion, junto con sus parametros
 	 * @param list La lista que contiene una expresion
 	 * @param funciones La lista de funciones definidas por el usuario
-	 * @return
+	 * @return El arbol generado por la funcion
 	 */
 	public static Node<String> MakeFunction(List<String> list, HashMap<String,Node<String>> funciones){
 		// Ejempl: (DEFUN F (a b) (* a b))

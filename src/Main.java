@@ -1,6 +1,4 @@
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.List;
@@ -14,6 +12,7 @@ public class Main {
 		System.out.println("Ingrese el nombre del archivo de texto que contiene el programa.\n");
 		File file = new File(input.nextLine());
         Scanner scanner = new Scanner(file);
+        input.close();
         System.out.println("Programa:");
         int n = 0;
         while (scanner.hasNextLine()){

@@ -98,10 +98,8 @@ public class Evaluate {
 			}
 			else if(branch.getData().equals("COND")) {
 				List<Node<String>> children = branch.getChildren();
-				Boolean r = false;
 				for(int i = 0; i < children.size(); i = i+2) {
 					if(EvalBranch(children.get(i),funciones).equals("T")) {
-						r = true;
 						return EvalBranch(children.get(i+1), funciones);
 					}
 				}

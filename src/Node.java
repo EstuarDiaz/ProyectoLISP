@@ -9,10 +9,19 @@ public class Node<T> {
  
  private Node<T> parent = null;
  
+ /**
+  * Creator
+  * @param data La informacion a almacenar
+  */
  public Node(T data) {
  this.data = data;
  }
  
+ /**
+  * Agrega un nodo al arbol
+  * @param child
+  * @return El nodo ingresado
+  */
  public Node<T> addChild(Node<T> child) {
  child.setParent(this);
  this.children.add(child);
@@ -20,7 +29,9 @@ public class Node<T> {
  }
  
  public void addChildren(List<Node<T>> children) {
- children.forEach(each -> each.setParent(this));
+	 for(int i = 0; i < children.size(); i++) {
+		 children.get(i).setParent(this);
+	 }
  this.children.addAll(children);
  }
  
@@ -48,9 +59,9 @@ public class Node<T> {
 	 String s = "";
 	 for(int i = 0; i < level; i++) {s = s + "-";}
 	 System.out.println(s + ">| " + this.getData());
-	 this.getChildren().forEach(each -> 
-	 	each.printData(level+1)
-	 );
+	 for(int j = 0; j < this.getChildren().size(); j++) {
+		 this.getChildren().get(j).printData(level+1);
+	 }
  }
 
 /**
@@ -64,9 +75,9 @@ public void replace(T search, T replace) {
 	if(this.getData().equals(search)) {
 		this.setData(replace);
 	}
-	this.getChildren().forEach(each -> 
- 		each.replace(search, replace)
-	);
+	for(int i = 0; i < this.getChildren().size(); i++) {
+		this.getChildren().get(i).replace(search, replace);
+	}
 }
 
 /**
