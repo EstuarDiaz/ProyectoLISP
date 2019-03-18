@@ -11,7 +11,8 @@ public class Main {
 		Scanner input = new Scanner(System.in);
 		String programa = "";
 		HashMap<String,Node<String>> funciones = new HashMap<String,Node<String>>();
-        File file = new File("programaLISP5.txt");
+		System.out.println("Ingrese el nombre del archivo de texto que contiene el programa.\n");
+		File file = new File(input.nextLine());
         Scanner scanner = new Scanner(file);
         System.out.println("Programa:");
         int n = 0;
