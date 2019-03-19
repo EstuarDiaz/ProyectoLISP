@@ -3,6 +3,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Parse{
+	//Se define el primer nodo, la raiz.
 	public Node<String> ParseList(List<String> lista) {
 		Node<String> root = new Node<String>("");
 		for(int i = 0; i < lista.size(); i++) {   
@@ -15,12 +16,14 @@ public class Parse{
 	 * @param s El string a convertir
 	 * @return La lista de tokens
 	 */
+	//Lista en la que son almacenados los caracteres utilizados en el programa.
 	public static List<String> MakeList(String s){
 		List<String> lista = new ArrayList<String>();
 		s = s.replace("(", " ( ");
 		s = s.replace(")", " ) ");
 		s = s.replace("+", " + ");
 		s = s.replace("*", " * ");
+		s = s.replace("/", " / ");
 		s = s.replace("-", " - ");
 		s = s.replace(">", " > ");
 		s = s.replace("<", " < ");
