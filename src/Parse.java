@@ -15,6 +15,7 @@ public class Parse{
 	 * @param s El string a convertir
 	 * @return la lista de tokens
 	 */
+	//Lista en la que son almacenados los caracteres utilizados en el programa.
 	public static List<String> MakeList(String s){
 		List<String> lista = new ArrayList<String>();
 		s = s.replace("(", " ( ");
