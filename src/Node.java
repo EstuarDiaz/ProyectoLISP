@@ -2,6 +2,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Node<T> {
+/*Se definen las acciones que la clase Node, puede realizar. Entre ellas estan:
+     -Agregar hijos dentro del arbol
+     -Llamar a los hijos del arbol
+     -Llamar a la informacion 
+     -Establecer la informacion
+     -Establecer a los padres
+     -Reemplazar la informacion
+     -Copiar la informacion
+*/
  
  private T data = null;
  
