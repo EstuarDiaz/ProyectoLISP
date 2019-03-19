@@ -3,6 +3,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Parse{
+	//Se define el primer nodo, la raiz.
 	public Node<String> ParseList(List<String> lista) {
 		Node<String> root = new Node<String>("");
 		for(int i = 0; i < lista.size(); i++) {   
