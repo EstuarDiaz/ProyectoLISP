@@ -6,7 +6,7 @@ public class NodeTest {
 
     @Test
     public void replace() {
-        String node = "Me vana remplazar :(";
+        String node = "Me van a remplazar :(";
         String nodos = "Yo lo remplazo :)";
         String nodeReplace = node.replace(node, nodos);
         assertNotEquals(node, nodeReplace);
@@ -16,6 +16,6 @@ public class NodeTest {
     public void copy() {
         Node<String> node = new Node<String>("Haz una prueba de que si copio");
         Node<String> copyNode = node.copy();
-        assertEquals(node, copyNode);
+        assertEquals(node.getData(), copyNode.getData());
     }
 }
