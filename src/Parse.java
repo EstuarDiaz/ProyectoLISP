@@ -23,6 +23,7 @@ public class Parse{
 		s = s.replace(")", " ) ");
 		s = s.replace("+", " + ");
 		s = s.replace("*", " * ");
+		s = s.replace("/", " / ");
 		s = s.replace("-", " - ");
 		s = s.replace(">", " > ");
 		s = s.replace("<", " < ");
